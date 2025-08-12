@@ -1,0 +1,12 @@
+body{
+    padding-top: 64px;
+}
+.custom-background {
+    background: radial-gradient(circle, #7ebccd, #688fde);
+    /* dark mode 背景 */
+}
+
+.light-mode.custom-background {
+    background: radial-gradient(circle, #baecf9, #f0f9ff);
+    /* light mode 背景 */
+}

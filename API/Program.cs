@@ -1,5 +1,6 @@
 using API.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,7 @@ builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-
+builder.Services.AddCors();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -23,7 +24,10 @@ if (app.Environment.IsDevelopment())
 }
 
 // Configure the HTTP request pipeline.
-
+app.UseCors(option =>
+{
+    option.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000");
+});
 app.MapControllers();
 DbInitializer.InitDb(app);
 
