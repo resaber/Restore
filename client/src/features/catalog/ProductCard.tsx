@@ -12,6 +12,7 @@ import {
   CardMedia,    // 卡片圖片區域
   Typography,   // 文字排版元件
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 // 定義 props 的型別，這裡的 product 屬性必須符合 Product 型別
 type Props = {
@@ -58,7 +59,7 @@ export default function ProductCard({ product }: Props) {
       {/* CardActions 用來放操作按鈕 */}
       <CardActions sx={{ justifyContent: 'space-between' }}>
         <Button>Add to Cart</Button> {/* 加入購物車按鈕 */}
-        <Button>View</Button>        {/* 檢視商品詳情按鈕 */}
+        <Button component = {Link} to = {`/catalog/${product.id}`}>View</Button>        {/* 檢視商品詳情按鈕 */}
       </CardActions>
     </Card>
   );

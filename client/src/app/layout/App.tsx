@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import type { Product } from '../models/product';
-import Catalog from '../../features/catalog/Catalog';
+import { useState } from 'react';
 import NavBar from './NavBar';
 import '../../styles/App.css';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import { Outlet } from 'react-router-dom';
+// import NavBarBs5 from './NavBarBs5';
 
 function App() {
-  const [products, setProducts] = useState<Product[]>([]);
   const [darkMode, setDarkMode] = useState(true);
   const palleteType = darkMode ? 'dark' : 'light';
   const darkTheme = createTheme({
@@ -17,12 +16,6 @@ function App() {
       },
     },
   });
-
-  useEffect(() => {
-    fetch('https://localhost:5001/api/product')
-      .then((response) => response.json())
-      .then((data) => setProducts(data));
-  }, []);
 
   // products.forEach((item, index) => {
   //   console.log({ index, ...item });
@@ -41,7 +34,7 @@ function App() {
           }`}
         >
           <div className="container-fluid py-3">
-            <Catalog products={products} />
+            <Outlet />
           </div>
         </div>
       </ThemeProvider>
