@@ -1,24 +1,15 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import type { Product } from '../../app/models/product';
 import Grid2 from '@mui/material/Grid2';
+import { useFetchProductDetailsQuery } from './catalogApi';
 
 export default function ProductDetails() {
-  // ✅ 從 URL 取得參數 id，例如路徑是 /product/3，則 id = "3"
+  // react-router-dom提供的hook  從 URL 取得參數 id，例如路徑是 /product/3，則 id = "3"
+  // hover id 也可以看到 useParams裡面的每個參數都是 const id: string | undefined
   const { id } = useParams();
+  //因為在catalogApi是定義id是number但是useParams是string 網址有帶 id，就轉成數字傳入；如果沒有，就傳 0（避免錯誤）
+  const {data: product,isLoading} = useFetchProductDetailsQuery(id? parseInt(id) : 0);
 
-  // ✅ 宣告一個狀態 product 來儲存 API 回傳的產品資料
-  // 初始為 null，表示尚未載入資料
-  const [product, setProduct] = useState<Product | null>(null);
-
-  // ✅ useEffect：用來處理「副作用」，這裡是指從 API 取得資料
-  useEffect(() => {
-    // 🔁 每次 id 改變時（或元件第一次掛載），就執行 fetch 資料
-    fetch(`https://localhost:5001/api/product/${id}`)
-      .then((response) => response.json()) // ⚠️ 注意要呼叫 json() 函式
-      .then((data) => setProduct(data)) // ✅ 將取得的資料放入 state（觸發 re-render）
-      .catch((error) => console.log(error)); // ❌ 如果失敗則在 console 顯示錯誤
-  }, [id]); // ✅ 依賴陣列：當 id 改變時才會重新執行 effect
+  if(!product || isLoading) return <div>Loading...</div>
 
   if (!product) return <div>Loading</div>;
   const ProductDetails = [

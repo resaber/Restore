@@ -1,21 +1,19 @@
 
-import { useEffect, useState } from "react";
-import type { Product } from "../../app/models/product"
+import { useFetchProductsQuery } from "./catalogApi";
 import ProductList from "./ProductList";
 
 
-
 export default function Catalog() {
-    const [products, setProducts] = useState<Product[]>([]);
-      useEffect(() => {
-    fetch('https://localhost:5001/api/product')
-      .then((response) => response.json())
-      .then((data) => setProducts(data));
-  }, []);
+  // 呼叫 RTK Query hook，取得資料與 loading 狀態
+  const { data, isLoading } = useFetchProductsQuery();
+
+  // 如果還在載入中或資料還沒回來，就顯示 Loading 畫面
+  if (isLoading || !data) return <div>資料載入中</div>;
+
+  // 資料載入完成後渲染產品列表
   return (
     <>
-      <ProductList products={products}/>
-    
-    </>  
-  )
+      <ProductList products={data} />
+    </>
+  );
 }
