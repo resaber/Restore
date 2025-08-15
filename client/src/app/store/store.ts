@@ -46,7 +46,7 @@ export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
 
-// ✅ 建立具型別的自訂 Hook
+// ✅ 建立具型別的自訂 Hook 官方文件react-reducer
 // 用官方推薦的 withTypes() 寫法，讓元件使用 Redux 時具備強型別
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
 export const useAppSelector = useSelector.withTypes<RootState>()

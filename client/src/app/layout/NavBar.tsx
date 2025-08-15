@@ -3,7 +3,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css'; // 引入 Bootstrap Icons 樣
 import IconButton from '@mui/material/IconButton';
 import { Badge, LinearProgress, useTheme, type Theme } from '@mui/material';
 import { ShoppingCart } from '@mui/icons-material';
-import { useAppSelector } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../store/store';
+import { toggleDarkMode } from './uiSlice';
 
 // 導覽列中間的連結（常見主頁連結）
 const midLinks = [
@@ -18,16 +19,19 @@ const rightLinks = [
   { title: '註冊', path: '/register' },
 ];
 
-// 傳進來的 props 類型定義
-type NavBarProps = {
-  darkMode: boolean; // 當前是否為深色模式
-  toggleDarkMode: () => void; // 切換主題的函式
-};
+// 也可以用App.tsx 傳進來的參數改寫
+// props 類型定義
+// type NavBarProps = {
+//   darkMode: boolean; // 當前是否為深色模式
+//   toggleDarkMode: () => void; // 切換主題的函式
+// };
 
-export default function NavBar({ darkMode, toggleDarkMode }: NavBarProps) {
-  //依據isLoading boolean判斷是否正在載入 
+//App.tsx 傳入的參數 設定type
+export default function NavBar() {
+  //依據isLoading boolean判斷是否正在載入
   //取得特定的store state 裡面的特定屬性 用useAppSelector
-  const { isLoading } = useAppSelector((state) => state.ui);
+  const { isLoading, darkMode } = useAppSelector((state) => state.ui);
+  const dispatch = useAppDispatch(); //註冊store.ts 裡面的useAppDispatch 可以用裡面reducer裡面的方法
   const theme: Theme = useTheme(); // ✅ 明確指定型別為 Theme
 
   // 當 NavLink 與目前網址匹配時會套用 activeClass
@@ -43,23 +47,24 @@ export default function NavBar({ darkMode, toggleDarkMode }: NavBarProps) {
           <NavLink
             className="navbar-brand fw-bold d-flex align-items-center gap-2"
             to="/"
+          ></NavLink>
+          🐾 貓咪咖啡廳
+          {/* 切換背景色設定 */}
+          <button
+            type="button"
+            className="btn btn-md p-1 ms-2"
+            style={{
+              backgroundColor: darkMode ? 'transparent' : 'black',
+            }}
+            // 匿名函式 用的是store.ts 裡面的toggleDarkMode這個action
+            onClick={() => dispatch(toggleDarkMode())}
+            title="切換主題"
           >
-            🐾 貓咪咖啡廳
-            <button
-              className="btn btn-md p-1"
-              style={{
-                backgroundColor: darkMode ? 'transparent' : 'black',
-              }}
-              onClick={toggleDarkMode}
-              title="切換主題"
-            >
-              <i
-                className={darkMode ? 'bi bi-moon-fill' : 'bi bi-sun-fill'}
-                style={!darkMode ? { color: 'orange' } : {}}
-              ></i>
-            </button>
-          </NavLink>
-
+            <i
+              className={darkMode ? 'bi bi-moon-fill' : 'bi bi-sun-fill'}
+              style={!darkMode ? { color: 'orange' } : {}}
+            ></i>
+          </button>
           {/* 漢堡按鈕（手機版展開收合導覽列用） */}
           <button
             className="navbar-toggler"
@@ -72,7 +77,6 @@ export default function NavBar({ darkMode, toggleDarkMode }: NavBarProps) {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-
           {/* 導覽列項目容器（展開/收合內容） */}
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             {/* 中間導覽連結區塊  把元素往左貼 margin-end: auto 中間置中 flex-grow-1 吃掉全部空間*/}
@@ -129,7 +133,7 @@ export default function NavBar({ darkMode, toggleDarkMode }: NavBarProps) {
 
       {/* 緊貼在導覽列下方的 loading bar */}
       {isLoading && (
-        <div >
+        <div>
           <LinearProgress color="secondary" />
         </div>
       )}
