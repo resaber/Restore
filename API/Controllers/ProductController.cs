@@ -6,9 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductController(StoreContext context) : ControllerBase
+
+    public class ProductController(StoreContext context) : BaseAPIController
     {
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetProducts()

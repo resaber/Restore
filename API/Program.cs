@@ -1,4 +1,5 @@
 using API.Data;
+using API.MiddleWare;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
@@ -15,7 +16,12 @@ builder.Services.AddDbContext<StoreContext>(options =>
 });
 
 builder.Services.AddCors();
+builder.Services.AddTransient<ExceptionMiddleWare>();
 var app = builder.Build();
+
+//加入請求處理流程中，讓每次 HTTP request 都會建立一個新的 middleware
+//來攔截與處理例外 請求結束才會自動釋放資源
+app.UseMiddleware<ExceptionMiddleWare>();
 
 if (app.Environment.IsDevelopment())
 {
@@ -24,6 +30,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Configure the HTTP request pipeline.
+
 app.UseCors(option =>
 {
     option.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000");
