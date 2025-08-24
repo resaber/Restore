@@ -33,7 +33,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(option =>
 {
-    option.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000");
+    option.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:3000");
 });
 app.MapControllers();
 DbInitializer.InitDb(app);

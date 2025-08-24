@@ -6,7 +6,8 @@ import { router } from "../routes/Routes";
 
 // 建立一個基本的 fetch 查詢（設定 API 基底網址）
 const customBaseQuery = fetchBaseQuery({
-  baseUrl: 'https://localhost:5001/api/' //  後端 API 的 base URL
+  baseUrl: 'https://localhost:5001/api/' ,//  後端 API 的 base URL
+  credentials : 'include'  // 這樣每次請求就會自動附上 cookie
 });
 //400 badRequest data 是 string , 401 則是有title Property我們會用到  , validation error 是 error objects  string[]
 type ErrorResponse = 

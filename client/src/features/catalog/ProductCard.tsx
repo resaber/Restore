@@ -6,13 +6,15 @@ import type { Product } from '../../app/models/product';
 
 // 從 MUI 引入其他會用到的元件
 import {
-  Button,       // 按鈕元件
-  CardActions,  // 卡片底部操作區域
-  CardContent,  // 卡片主要內容區域
-  CardMedia,    // 卡片圖片區域
-  Typography,   // 文字排版元件
+  Button, // 按鈕元件
+  CardActions, // 卡片底部操作區域
+  CardContent, // 卡片主要內容區域
+  CardMedia, // 卡片圖片區域
+  Typography, // 文字排版元件
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useAddBasketItemMutation } from '../basket/basketApi';
+import { currencyFormate } from '../../lib/util';
 
 // 定義 props 的型別，這裡的 product 屬性必須符合 Product 型別
 type Props = {
@@ -21,18 +23,22 @@ type Props = {
 
 // 預設匯出 ProductCard 元件，使用解構方式從 props 中取得 product
 export default function ProductCard({ product }: Props) {
+  // 一個function : addBasketItem: builder.mutation<Basket, { productId: number; quantity: number }>
+  // mutation 的狀態屬性 mutation hooks
+  // isLoading 送出請求 => true 請求完 false
+  const [addBasketItem, { isLoading }] = useAddBasketItemMutation();
   return (
     // elevation={3} 設定陰影深度
-    <Card elevation={3}
-        sx={{
-            width : 280,
-            borderRadius : 2,
-            display : 'flex',
-            flexDirection : 'column',
-            justifyContent : 'space-between'
-        }}
-        >
-        
+    <Card
+      elevation={3}
+      sx={{
+        width: 280,
+        borderRadius: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}
+    >
       {/* CardMedia 用來顯示圖片 */}
       <CardMedia
         sx={{ height: 240, backgroundSize: 'cover' }} // 設定圖片高度 & 背景填充方式
@@ -49,17 +55,28 @@ export default function ProductCard({ product }: Props) {
         >
           {product.name} {/* 顯示商品名稱 */}
         </Typography>
-        
+
         {/* 顯示價格，將價格（以分為單位）轉換為美元格式 */}
         <Typography variant="h6" sx={{ color: 'secondary.main' }}>
-         ${Math.round(product.price / 100)}
+          {currencyFormate(product.price)}
         </Typography>
       </CardContent>
 
       {/* CardActions 用來放操作按鈕 */}
       <CardActions sx={{ justifyContent: 'space-between' }}>
-        <Button>Add to Cart</Button> {/* 加入購物車按鈕 */}
-        <Button component = {Link} to = {`/catalog/${product.id}`}>View</Button>        {/* 檢視商品詳情按鈕 */}
+        <Button
+          disabled={isLoading}
+          //ES6 的物件屬性縮寫 (Object Property Shorthand) 方法參數 = 帶入的參數名稱
+          //const obj = { product: product, quantity: 1 };
+          onClick={() => addBasketItem({  product, quantity: 1 })}
+        >
+          Add to Cart
+        </Button>{' '}
+        {/* 加入購物車按鈕 */}
+        <Button component={Link} to={`/catalog/${product.id}`}>
+          View
+        </Button>{' '}
+        {/* 檢視商品詳情按鈕 */}
       </CardActions>
     </Card>
   );

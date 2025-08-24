@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { catalogApi } from '../../features/catalog/catalogApi';
 import { uiSlice } from '../layout/uiSlice';
 import { errorApi } from '../../features/about/errorApi';
+import { basketApi } from '../../features/basket/basketApi';
 
 // 🔸封裝 store 的建立邏輯
 // 建立 Redux store，並將 reducer 傳入
@@ -26,6 +27,7 @@ export const store = configureStore({
         // 左邊是動態屬性名稱 左邊是key
         [catalogApi.reducerPath] : catalogApi.reducer,
         [errorApi.reducerPath] : errorApi.reducer,
+        [basketApi.reducerPath] : basketApi.reducer,
         //其他slice reducer
 
 
@@ -39,7 +41,10 @@ export const store = configureStore({
     },
     //middleWare區塊
     middleware:(GetDefaultMiddleware) =>
-      GetDefaultMiddleware().concat(catalogApi.middleware,errorApi.middleware)
+      GetDefaultMiddleware().concat(
+        catalogApi.middleware,
+        errorApi.middleware,
+        basketApi.middleware)
 
 })
 
