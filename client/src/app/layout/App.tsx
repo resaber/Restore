@@ -1,6 +1,6 @@
 import '../../styles/App.css';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Outlet, ScrollRestoration } from 'react-router-dom';
 import { useAppSelector } from '../store/store';
 
 import NavBar from './NavBar';
@@ -36,6 +36,8 @@ function App() {
     <>
       {/* <ThemeProvider>：將 darkTheme 套用到整個 App。 */}
       <ThemeProvider theme={darkTheme}>
+        {/* React Router dom 切換路由時 回到剛剛滾動停留的位置 */}
+        <ScrollRestoration /> 
         <CssBaseline />
         {/* remove prop of NavBar component */}
         <NavBar />

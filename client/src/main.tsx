@@ -29,7 +29,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
-
+// 對應到index.html div id = 'root'畫面渲染的目標區域
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
      {/* 讓整個 App 都能使用 Redux store */}

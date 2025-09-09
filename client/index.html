@@ -5,9 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Re_Store</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
   </head>
   <body>
+    <!-- React 要把畫面插入的容器 對應到main.tsx組件 掛載點先設立好裡面的createRoot(document.getElementById('root')!).render -->
     <div id="root"></div>
+    <!-- 引入一個 TypeScript 模組檔案 → 執行裡面的程式碼 → 從這裡開始跑整個 App type = 'module'表示這是一個支援 import/export 的 ES 模組  ES Module（簡稱 ESM）-->
+     <!-- ES6 就是這個模組標準化的那一個版本 -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

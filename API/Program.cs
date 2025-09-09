@@ -33,6 +33,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(option =>
 {
+    //開放Cors給React框架3000使用
     option.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:3000");
 });
 app.MapControllers();
