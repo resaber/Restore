@@ -56,7 +56,10 @@ export default function OrderSummary() {
                 <Box mt={2}>
                     <Button
                         component = {Link}
-                        to = '/checkout' //前往結帳頁面
+                        //路由守衛
+                        //組件 已登入的話 會返回Outlet 並渲染 內部的子組件 CheckoutPage 沒登入的話 導向登入頁面 並將/checkout 作為state location.pathname傳遞過去
+                        to = '/checkout' //前往結帳頁面  /checkout 嵌套在Routes組件內的 <RequireAuth /> 的 children 裡，React Router 會首先渲染 <RequireAuth /> 組件。
+                        size= 'large'
                         variant="contained"
                         color="primary"
                         fullWidth

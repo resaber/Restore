@@ -1,4 +1,4 @@
-import { Grid2, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useFetchFiltersQuery, useFetchProductsQuery } from './catalogApi';
 import ProductList from './ProductList';
 import Filters from './Filters';
@@ -30,14 +30,14 @@ export default function Catalog() {
 
   // 資料載入完成後渲染產品列表
   return (
-    <Grid2 container spacing={4}>
+    <Grid container spacing={4}>
       {/* 左側3/12 */}
-      <Grid2 size={3}>
+      <Grid size={3}>
         {/* 傳遞key-value pair資料給子元素 類似這樣 filtersData : { brands: string[]; types: string[];*/}
         <Filters filtersData = {filtersData}/>
-      </Grid2>
+      </Grid>
       {/* 右側9/12 */}
-      <Grid2 size={9}>
+      <Grid size={9}>
         {/* Query 得到的商品清單 items存在不是undefined 且這個 Product[]長度不為0 */}
         {data.items && data.items.length > 0 ?
           (
@@ -56,7 +56,7 @@ export default function Catalog() {
             <Typography variant='h5'>此篩選條件下沒有結果</Typography>
           )}
 
-      </Grid2>
-    </Grid2>
+      </Grid>
+    </Grid>
   );
 }

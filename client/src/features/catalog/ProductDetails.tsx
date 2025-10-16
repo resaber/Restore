@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
-import Grid2 from '@mui/material/Grid2';
+
 import { useFetchProductDetailsQuery } from './catalogApi';
-import { TextField } from '@mui/material';
+import { Grid, TextField } from '@mui/material';
 import { useAddBasketItemMutation, useFetchBasketQuery, useRemoveBasketItemMutation } from '../basket/basketApi';
 import { useEffect, useState, type ChangeEvent } from 'react';
 
@@ -67,15 +67,15 @@ export default function ProductDetails() {
   ];
 
   return (
-    <Grid2 container spacing={6} maxWidth="lg">
-      <Grid2 size={6}>
+    <Grid container spacing={6} maxWidth="lg">
+      <Grid size={6}>
         <img
           src={product?.pictureUrl}
           alt={product.name}
           style={{ width: '100%' }}
         />
-      </Grid2>
-      <Grid2 size={6}>
+      </Grid>
+      <Grid size={6}>
         <h3 className="fw-bold">{product.name}</h3>
         <hr className=" mb-3" />
         <h4 className="fw-bold text-secondary">$({product.price / 100})</h4>
@@ -122,7 +122,7 @@ export default function ProductDetails() {
             </button>
           </div>
         </div>
-      </Grid2>
-    </Grid2>
+      </Grid>
+    </Grid>
   );
 }

@@ -7,7 +7,9 @@ export default function Search() {
   //拿取state 裡面的Slice 裡面的屬性
   const { keyword } = useAppSelector((state) => state.catalog);
 
-  //建立local state 檢測輸入欄 初始值用Redux store帶進來的keyword
+  //建立local state 檢測輸入欄 初始值用Redux store帶進來的keyword 
+  //使用這打字 local state term (即時更新 UI)  0.5秒後dispatch(setKeyword(term)) debounce(防抖)
+  //觸發 useFetchProductsQuery
   const [term, setTerm] = useState(keyword);
   //使用對應的action 改變state
   const dispatch = useAppDispatch();
@@ -19,7 +21,8 @@ export default function Search() {
     setTerm(keyword);
   }, [keyword]);
 
-  //2. useEffect 監聽本地 term → 延遲更新 Redux keyword（防抖）(Debounce)
+  //2. useEffect 監聽本地 term → 延遲更新 Redux keyword（防抖)debounce
+  //區分本地term 和外部 Redux keyword狀態 避免API 被打爆
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       dispatch(setKeyword(term)); //傳入本地端state過去 更新外部的state

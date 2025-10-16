@@ -1,12 +1,14 @@
 using System;
+using System.Threading.Tasks;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
 public class DbInitializer
 {
-    public static void InitDb(WebApplication app)
+    public static async Task InitDb(WebApplication app)
     {
         // 建立一個新的 DI 服務範圍 (Scope)
         // DbContext 是 Scoped 生命週期，必須在 Scope 中建立與使用
@@ -17,17 +19,48 @@ public class DbInitializer
         var context = scope.ServiceProvider.GetRequiredService<StoreContext>()
             ?? throw new InvalidOperationException("Failed to retrieve store context");
 
+        //取得註冊好的ASP.NET Identity 提供的服務 提供的 UserManager<User> 實例，管理使用者帳號（新增、刪除、設定密碼、角色、驗證信箱、登入鎖定…）
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>()
+            ?? throw new InvalidOperationException("Failed to retrieve user manager");
+
         // 呼叫 SeedData 方法，把 context 傳進去
         // SeedData 負責執行資料庫初始化，例如建立資料庫、套用 Migration、插入種子資料
-        SeedData(context);
+        await SeedData(context, userManager);
     }
 
-    private static void SeedData(StoreContext context)
+    //UserManager能用是因為Identity已經註冊到 DI(Program.cs AddIdentityApiEndpoints<User>()) <>內 使用User Entity已使用相關功能
+    private static async Task SeedData(StoreContext context, UserManager<User> userManager)
     {
-        // 確保資料庫存在並且套用所有尚未執行的 Migration
+        // 確保資料庫存在並且套用所有尚未執行的 Migration EF Core已經建立好 
         // 如果資料庫不存在就建立，如果結構落後就更新
         context.Database.Migrate();
+        //資料庫中尚未有任何使用者 初始化兩個預設帳號 登入畫面測試功能用的時候
+        //AspNetUsers資料表沒有任何使用者的情況下
+        if (!userManager.Users.Any())
+        {
+            //建立一個使用者物件  給UserName 和 Password 必填屬性 Email選填
+            var user = new User
+            {
+                UserName = "bob@gmail.com",
+                Email = "bob@gmail.com"
+            };
 
+            // AspNetUsers 使用者資料表建立 userManager 可以處理密碼加密的問題
+            await userManager.CreateAsync(user, "Pa$$w0rd"); //必須符合 Identity 的密碼策略（包含大小寫、數字、特殊字元等），否則無法他不會被正確餵到資料庫
+
+            //這帳號是會員身分 加入到 Identity 中介資料表 StoreContext 對應到AspNetRoles 的Name屬性 StoreContext建立的角色資料表 要注意名稱要一致
+            await userManager.AddToRoleAsync(user, "Member"); 
+
+            //建立一個使用者物件
+            var admin = new User
+            {
+                UserName = "admin@gmail.com",
+                Email = "admin@gmail.com"
+            };
+
+            await userManager.CreateAsync(admin, "Pa$$w0rd"); //必須符合 Identity 的密碼策略（包含大小寫、數字、特殊字元等）userManager.CreateAsync(...) 就會直接更新資料庫
+            await userManager.AddToRolesAsync(admin, ["Member", "Admin"]); //admin這帳號同時有兩個角色身分 userManager.AddToRolesAsync 就會直接更新回資料庫 
+        }
         // 如果資料表 Products 已經有資料，就直接結束
         // 這樣可以避免重複插入相同的種子資料
         if (context.Products.Any()) return;

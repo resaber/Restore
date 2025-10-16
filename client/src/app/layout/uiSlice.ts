@@ -3,12 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 
 //設定localStorage key 儲存背景 色彩模式設定
 const getInitialDarkMode = () =>{
-    // 從瀏覽器 localStorage 拿 key 對應的 value（字串形式）
+    // 從瀏覽器 localStorage 拿 key為darkMode 對應的 value（字串形式）
   const storedDarkMode = localStorage.getItem('darkMode');
   // 如果有設定過，就用 JSON.parse 轉成布林值 true / false
   // 如果沒設定過（第一次使用），預設回傳 true（啟用 dark mode）
   //return value 如果瀏覽器一開始載入 沒設定的情況下 預設給true 從前端json value轉換成 可以用的js物件
-  //相反是JSON.stringfy(true) js物件轉換成網頁的json
+  //相反是JSON.stringfy(true) js物件轉換成網頁的json    
+  //把 "true" 或 "false" 轉換成 boolean true/false
+  //沒有設定過 預設true
   return storedDarkMode ? JSON.parse(storedDarkMode) : true;
 }
 
@@ -17,7 +19,7 @@ export  const uiSlice  = createSlice({
     name:'ui',
     initialState : {
         isLoading : false,
-        //新增一個state 接收的是getInitialDarkMode 這個localStorage裡面的key-value
+        //新增一個state 接收的是getInitialDarkMode 這個localStorage裡面的key-value 
         darkMode :getInitialDarkMode()
     },
     //實際的action
